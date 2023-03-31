@@ -310,16 +310,15 @@ public class MainActivity extends StageAppActivity {
     private CardView createCandidatureView(Candidature candidature, Offre offre, EtatCandidature etat) {
         // Création d'une CardView
         CardView card = new CardView(this);
-        /* TODO :
+
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CandidaturesActivity.this, CandidatureActivity.class);
-                intent.putExtra("candidature", candidature);
+                Intent intent = new Intent(MainActivity.this, DetailOffreActivity.class);
                 intent.putExtra("offre", offre);
                 startActivity(intent);
             }
-        }); */
+        });
         card.setRadius(30);
         card.setContentPadding(24, 20, 24, 20);
         card.setCardElevation(5);

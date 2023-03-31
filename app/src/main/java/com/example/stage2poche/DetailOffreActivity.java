@@ -94,7 +94,15 @@ public class DetailOffreActivity extends StageAppActivity {
                 startActivity(intent);
             }
         });
-        lesOffresTV.setOnClickListener(v -> finish());
+        lesOffresTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailOffreActivity.this, AllOffersActivity.class);
+                // Clear the stack
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -231,6 +239,7 @@ public class DetailOffreActivity extends StageAppActivity {
 
             @Override
             public void traiterResultat(OffresRetenuesResponse response) {
+                if(response == null) return;
                 // Get the offreRetenues
                 List<OffreRetenue> offreRetenues = response.offresRetenues;
                 // Check if the user is already candidate
@@ -245,7 +254,7 @@ public class DetailOffreActivity extends StageAppActivity {
 
             @Override
             public void traiterErreur() {
-
+                modifierBtn.setVisibility(View.GONE);
             }
         });
 
@@ -257,7 +266,6 @@ public class DetailOffreActivity extends StageAppActivity {
                         .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // Perform the action for "Oui" button
-                                // For example, you can call a method to validate the candidature
                                 validateCandidature();
                             }
                         })
