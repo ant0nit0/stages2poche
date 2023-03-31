@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_log_in"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/Connexion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stages2Poche - Connexion"
+        tools:ignore="MissingConstraints"
+        android:layout_marginTop="96dp"
+        android:textSize="30sp"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/Nom_utilisateur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="Nom d'utilisateur"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/Connexion"
+        app:layout_constraintStart_toStartOf="@+id/Connexion"
+        app:layout_constraintTop_toBottomOf="@+id/Connexion"
+        tools:ignore="MissingConstraints" />
+
+    <EditText
+        android:id="@+id/login_username"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Saisissez votre Nom d'utilisateur"
+        android:textAlignment="center"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
+        app:layout_constraintTop_toBottomOf="@+id/Nom_utilisateur"
+        app:layout_constraintStart_toStartOf="@+id/Nom_utilisateur"
+        app:layout_constraintEnd_toEndOf="@+id/Nom_utilisateur"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/Mot_de_passe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="Mot de passe"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/login_username"
+        app:layout_constraintStart_toStartOf="@+id/login_username"
+        app:layout_constraintTop_toBottomOf="@+id/login_username"
+        tools:ignore="MissingConstraints" />
+
+
+    <EditText
+        android:id="@+id/login_password"
+        android:textAlignment="center"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="Saisissez votre Mot de passe"
+        android:imeOptions="actionDone"
+        android:inputType="textPassword"
+        android:selectAllOnFocus="true"
+        app:layout_constraintTop_toBottomOf="@+id/Mot_de_passe"
+        app:layout_constraintStart_toStartOf="@+id/Mot_de_passe"
+        app:layout_constraintEnd_toEndOf="@+id/Mot_de_passe"
+        />
+
+
+    <Button
+        android:id="@+id/login_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="64dp"
+        android:text="@string/action_sign_in"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password"
+        app:layout_constraintVertical_bias="0.2" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

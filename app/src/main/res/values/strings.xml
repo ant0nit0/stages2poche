@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Stage2Poche</string>
+
+    <!-- LOGIN -->
+    <string name="token_key">token key</string>
+    <string name="login_key">login key</string>
+    <string name="login_id_path">login id path</string>
+    <string name="prompt_email">Email :</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="action_sign_in">Se connecter</string>
+    <string name="main_offres_title">Offres</string>
+    <string name="main_candidatures_title">Mes candidatures</string>
+
+    <string-array name="etats_candidature">
+        <item>A Définir</item>
+        <item>A Envoyer</item>
+        <item>En attente de réponse</item>
+        <item>En attente de Rdv</item>
+        <item>En attente d\'entretien</item>
+        <item>Refusée</item>
+        <item>Acceptée</item>
+    </string-array>
+
+</resources>
