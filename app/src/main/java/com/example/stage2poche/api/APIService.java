@@ -38,6 +38,9 @@ public interface APIService {
     @GET("/api/compte_etudiants/{id}")
     Call<CompteEtudiant> doGetCompteEtudiant(@Header("Authorization") String token, @Path("id") String id);
 
+    @PUT("/api/compte_etudiants/{id}")
+    Call<CompteEtudiant> doUpdateCompteEtudiant(@Header("Authorization") String token, @Path("id") String id, @Body CompteEtudiant newCompteEtudiant);
+
     // Offres
     @GET("/api/offres")
     Call<OffresResponse> doGetOffres(@Header("Authorization") String token);

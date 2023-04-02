@@ -31,6 +31,15 @@ public class StageAppActivity extends AppCompatActivity {
         apiInterface = APIClient.getAPIService();
     }
 
+
+    protected void clearAuthData() {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.remove(getString(R.string.token_key));
+        editor.remove(getString(R.string.login_key));
+        editor.remove(getString(R.string.login_id_path));
+        editor.apply();
+    }
+
     private SharedPreferences getSharedPreferences() {
         return getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
     }

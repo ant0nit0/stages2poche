@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
@@ -22,6 +24,12 @@ public class CompteEtudiant implements Parcelable {
     public List<String> roles;
     @SerializedName("password")
     public String password;
+    @SerializedName("derniereConnexion")
+    @Nullable
+    public String derniereConnexion;
+
+    @SerializedName("etatRecherche")
+    public String etatRecherche;
 
     // Constructor
     public CompteEtudiant(Parcel in) {
@@ -29,9 +37,23 @@ public class CompteEtudiant implements Parcelable {
         login = in.readString();
         roles = in.createStringArrayList();
         password = in.readString();
-
+        derniereConnexion = in.readString();
+        etatRecherche = in.readString();
     }
 
+    // Copy constructor
+    public CompteEtudiant(CompteEtudiant compteEtudiant) {
+        this.id = compteEtudiant.id;
+        this.login = compteEtudiant.login;
+        this.roles = compteEtudiant.roles;
+        this.password = compteEtudiant.password;
+        this.derniereConnexion = compteEtudiant.derniereConnexion;
+        this.etatRecherche = compteEtudiant.etatRecherche;
+    }
+
+    public void setEtatRecherche(String etatRecherche) {
+        this.etatRecherche = etatRecherche;
+    }
 
     // Parcelable implementation
 
@@ -59,5 +81,7 @@ public class CompteEtudiant implements Parcelable {
         parcel.writeString(login);
         parcel.writeStringList(roles);
         parcel.writeString(password);
+        parcel.writeString(derniereConnexion);
+        parcel.writeString(etatRecherche);
     }
 }

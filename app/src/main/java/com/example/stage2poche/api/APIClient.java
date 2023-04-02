@@ -30,7 +30,7 @@ public class APIClient {
     //https://square.github.io/retrofit/?utm_source=developer.android.com&utm_medium=referral
     //https://www.digitalocean.com/community/tutorials/retrofit-android-example-tutorial
 
-     private static final String BASE_URL = "http://192.168.141.201:8000/";
+     private static final String BASE_URL = "http://192.168.141.153:8000/";
     //private static final String BASE_URL = "http://127.0.0.1:8000/";
 
     // Init http receptor
@@ -59,6 +59,19 @@ public class APIClient {
         APIService apiInterface = activity.getApiInterface();
 
         Call<CompteEtudiant> call = apiInterface.doGetCompteEtudiant(getBearer(activity), id);
+        APIClient.<CompteEtudiant>doCall(call, cllbck);
+    }
+
+    /**
+     * Updates a CompteEtudiant, using the API
+     * @param activity the activity that call this method
+     * @param id the id of the student account
+     * @param cllbck the callback to call when the result is ready
+     */
+    public static void updateCompteEtudiant(StageAppActivity activity, String id, CompteEtudiant compteEtudiant, ResultatAppel<CompteEtudiant> cllbck) {
+        APIService apiInterface = activity.getApiInterface();
+
+        Call<CompteEtudiant> call = apiInterface.doUpdateCompteEtudiant(getBearer(activity), id, compteEtudiant);
         APIClient.<CompteEtudiant>doCall(call, cllbck);
     }
 

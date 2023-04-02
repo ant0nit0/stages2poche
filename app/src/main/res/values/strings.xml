@@ -12,6 +12,11 @@
     <string name="main_offres_title">Offres</string>
     <string name="main_candidatures_title">Mes candidatures</string>
 
+    <!-- Notifications channel -->
+    <string name="channel_name">Relance de canddature</string>
+    <string name="channel_description">Channel servant a rappeler de relancer les candidatures</string>
+
+
     <string-array name="etats_candidature">
         <item>A Définir</item>
         <item>A Envoyer</item>

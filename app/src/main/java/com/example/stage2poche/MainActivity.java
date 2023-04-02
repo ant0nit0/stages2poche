@@ -5,8 +5,11 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +38,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends StageAppActivity {
 
+    public static final String CHANNEL_ID = "my_app_notifications";
+
     private DrawerLayout drawerLayout;
     private ImageView asideMenuQuit, asideMenu;
 
@@ -43,7 +48,7 @@ public class MainActivity extends StageAppActivity {
     private LinearLayout candidaturesLayout;
     private ProgressBar progressBar;
 
-    private Button seeAllOffersButton;
+    private Button seeAllOffersButton, drawerLogoutBtn;
 
     // De la forme : { Offre.id: Entreprise }
     private Map<String, Entreprise> entreprisesMap = new HashMap<>();
@@ -72,6 +77,7 @@ public class MainActivity extends StageAppActivity {
         asideMenu = findViewById(R.id.aside_menu);
         drawerUsernameTV = findViewById(R.id.drawer_compte_username);
         drawerLastCoTV = findViewById(R.id.drawer_compte_last_co);
+        drawerLogoutBtn = findViewById(R.id.drawer_logout_button);
 
         initDrawer();
 
@@ -108,11 +114,36 @@ public class MainActivity extends StageAppActivity {
 
         refreshNBOffres();
         refreshCandidatures();
+        createNotificationChannel();
     }
 
 
     private void initDrawer(){
         drawerUsernameTV.setText(getLogin());
+        drawerLogoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAuthData();
+
+                // Navigate to login activity
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void createNotificationChannel() {
+        CharSequence name = getString(R.string.channel_name);
+        String description = getString(R.string.channel_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
 
     }
 
@@ -163,6 +194,7 @@ public class MainActivity extends StageAppActivity {
 
             @Override
             public void traiterResultat(OffresRetenuesResponse response) {
+                if(response.offresRetenues == null) return;
                 nbOffresRetenuesTV.setText(response.offresRetenues.size() + " offres retenue" + (response.offresRetenues.size() > 1 ? "s" : ""));
             }
 
@@ -187,6 +219,10 @@ public class MainActivity extends StageAppActivity {
                 // Set the number of candidatures in textview
                 nbCandidaturesEnvoyeesTV.setText("Nombre de candidature" + (nbCandidatures > 1 ? "s" : "") + " envoyée" + (nbCandidatures > 1 ? "s : " : " : ") + nbCandidatures);
 
+                if(response.candidatures.size() == 0) {
+                    progressBar.setVisibility(View.GONE);
+                    return;
+                }
                 // Set the map of candidatures
                 for(Candidature candidature : response.candidatures) {
                     // On récupère l'état de la candidature
@@ -316,6 +352,7 @@ public class MainActivity extends StageAppActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DetailOffreActivity.class);
                 intent.putExtra("offre", offre);
+                intent.putExtra("comeFromCandidature", true);
                 startActivity(intent);
             }
         });

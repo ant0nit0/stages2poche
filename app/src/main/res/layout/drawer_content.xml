@@ -38,7 +38,7 @@
             android:id="@+id/drawer_compte_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="borealea"
+            android:text=""
             android:textSize="18sp"
             android:textColor="#777474"
             android:textStyle="bold"/>
@@ -65,7 +65,7 @@
             android:id="@+id/drawer_compte_last_co"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="15 janvier 2023"
+            android:text=""
             android:textSize="18sp"
             android:textColor="#777474"
             android:textStyle="bold"/>
@@ -73,6 +73,7 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/drawer_logout_button"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="Se déconnecter"

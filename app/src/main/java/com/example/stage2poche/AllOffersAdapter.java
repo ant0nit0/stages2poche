@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.stage2poche.api.APIClient;
 import com.example.stage2poche.api.ResultatAppel;
+import com.example.stage2poche.entities.CompteEtudiant;
 import com.example.stage2poche.entities.Entreprise;
 import com.example.stage2poche.entities.offres.Offre;
 import com.example.stage2poche.entities.offres.OffreConsultee;
@@ -68,6 +69,34 @@ public class AllOffersAdapter extends RecyclerView.Adapter<OfferItemViewHolder> 
                 APIClient.getOffresConsultees(context, new ResultatAppel<OffresConsulteesResponse>() {
                     @Override
                     public void traiterResultat(OffresConsulteesResponse response) {
+                        // Si l'étudiant n'a pas consulté d'offre on passe son statut de recherche à recherche
+                        // TODO: Changer les droits pour permettre de modifier l'état de la recherche
+                        /*if (response.offresConsultees.size() == 0) {
+                            APIClient.getCompteEtudiant(context, context.getCompteId(), new ResultatAppel<CompteEtudiant>() {
+                                @Override
+                                public void traiterResultat(CompteEtudiant compteEtudiant) {
+                                    compteEtudiant.etatRecherche = "/api/etat_recherches/2";
+                                    APIClient.updateCompteEtudiant(context, compteEtudiant.id, compteEtudiant, new ResultatAppel<CompteEtudiant>() {
+                                        @Override
+                                        public void traiterResultat(CompteEtudiant compteEtudiant) {
+                                            // Do nothing
+                                        }
+
+                                        @Override
+                                        public void traiterErreur() {
+                                            // Do nothing
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void traiterErreur() {
+                                    // Do nothing
+                                }
+                            });
+                        }*/
+
+
                         boolean alreadyExists = false;
 
                         // Iterate through the existing OffreConsultees
@@ -84,7 +113,6 @@ public class AllOffersAdapter extends RecyclerView.Adapter<OfferItemViewHolder> 
                         // If the OffreConsultee doesn't already exist, create a new one
                         if (!alreadyExists) {
                             CreateOffreConsulteeRequest request = new CreateOffreConsulteeRequest(("/api/compte_etudiants/" + context.getCompteId()), offre._id);
-                            System.out.println("DEBUG : Creating offre consultee: " + request);
                             APIClient.postOffreConsultee(context, request, new ResultatAppel<PostOffreResponse>() {
                                 @Override
                                 public void traiterResultat(PostOffreResponse response) {
@@ -93,13 +121,13 @@ public class AllOffersAdapter extends RecyclerView.Adapter<OfferItemViewHolder> 
 
                                 @Override
                                 public void traiterErreur() {
-                                    System.out.println("DEBUG : Error creating offre consultee");
                                     Toast.makeText(context, "Une erreur est survenue lors de la connexion au serveur, veuillez rééssayer", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
-                            System.out.println("DEBUG : Offre consultee already exists");
                         }
+
+
 
                         // Start the new activity
                         Intent intent = new Intent(context, DetailOffreActivity.class);
@@ -109,7 +137,6 @@ public class AllOffersAdapter extends RecyclerView.Adapter<OfferItemViewHolder> 
 
                     @Override
                     public void traiterErreur() {
-                        System.out.println("DEBUG : Error fetching offres consultees");
                         Toast.makeText(context, "Une erreur est survenue lors de la connexion au serveur, veuillez rééssayer", Toast.LENGTH_SHORT).show();
                     }
                 });

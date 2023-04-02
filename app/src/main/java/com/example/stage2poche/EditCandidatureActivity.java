@@ -1,11 +1,15 @@
 package com.example.stage2poche;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,11 +24,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.example.stage2poche.api.APIClient;
 import com.example.stage2poche.api.ResultatAppel;
 import com.example.stage2poche.entities.Candidature;
+import com.example.stage2poche.entities.NotificationReceiver;
 import com.example.stage2poche.entities.offres.Offre;
 import com.example.stage2poche.enums.EtatCandidature;
+import com.example.stage2poche.enums.EtatOffre;
 import com.example.stage2poche.requests.CandidatureRequest;
 import com.example.stage2poche.responses.CandidaturesResponse;
 import com.example.stage2poche.responses.CreateCandidatureResponse;
@@ -51,6 +60,8 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
     private EditText descriptionET;
     private int year = -1, month = -1, day = -1, hour = -1, minute = -1, etatIndex;
     private String formattedDateTime, typeAction;
+
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.FRANCE);
     private Candidature candidature;
     boolean isCandidate = false;
 
@@ -94,7 +105,7 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
         lesOffresArianeTV.setOnClickListener(v -> {
             Intent intent = new Intent(EditCandidatureActivity.this, AllOffersActivity.class);
             // Clear the stack
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
         accueilTV.setOnClickListener(v -> {
@@ -139,13 +150,13 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to delete this item?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage("Etes-vous sûr de vouloir abandonner cette offre de stage ?")
+                .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         deleteCandidature();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Non", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User cancelled the dialog, do nothing
                     }
@@ -156,14 +167,16 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
     }
 
     private void deleteCandidature(){
-        System.out.println("Candidature id : " + candidature._id);
         APIClient.deleteCandidature(this, candidature._id.replace("/api/candidatures/", ""), new ResultatAppel<Candidature>() {
             @Override
             public void traiterResultat(Candidature response) {
-                System.out.println("Candidature supprimée");
-                System.out.println(response);
+                int offreId = Integer.parseInt(offre._id.replace("/api/offres/", ""));
+                cancelNotification(offreId);
                 Toast.makeText(EditCandidatureActivity.this, "Candidature supprimée", Toast.LENGTH_SHORT).show();
-                finish();
+                Intent intent = new Intent(EditCandidatureActivity.this, DetailOffreActivity.class);
+                intent.putExtra("offre", offre);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
 
             @Override
@@ -195,8 +208,19 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
             APIClient.postCandidature(EditCandidatureActivity.this, request, new ResultatAppel<CreateCandidatureResponse>() {
                 @Override
                 public void traiterResultat(CreateCandidatureResponse response) {
-                    System.out.println(response);
-                    System.out.println("Response: " + new Gson().toJson(response)); // Log the response in JSON format
+                    Calendar calendar = Calendar.getInstance();
+                    // Parse formattedDateTime
+                    try {
+                        Date date = dateFormat.parse(formattedDateTime);
+                        calendar.setTime(date);
+                    } catch (ParseException e) {
+                        Log.e("EditCandidatureActivity", "Error parsing date: " + e.getMessage());
+                    }
+                    int offerId = Integer.parseInt(offre._id.replace("/api/offres/", ""));
+                    int etatId = Integer.parseInt(offre.etatOffre.replace("/api/etat_offres/", ""));
+                    String content = "Vous avez un rappel aujourd'hui pour l'offre " + offre.intitule +
+                            ".\nLe statut de l'offre est actuellement : " + EtatOffre.getString(EtatOffre.fromId(etatId)) + ".";
+                    scheduleNotification(offerId, content, calendar.getTimeInMillis());
                     Toast.makeText(EditCandidatureActivity.this, "Candidature créée", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -205,13 +229,27 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
                 public void traiterErreur() {
                 }
             });
+
         } else {
             String id = candidature._id.replace("/api/candidatures/", "");
             APIClient.updateCandidature(this, id, request,  new ResultatAppel<Candidature>() {
                 @Override
                 public void traiterResultat(Candidature response) {
-                    System.out.println("Candidature mise à jour");
-                    System.out.println(response);
+                    cancelNotification(Integer.parseInt(offre._id.replace("/api/offres/", "")));
+                    // Schedule notification
+                    Calendar calendar = Calendar.getInstance();
+                    // Parse formattedDateTime
+                    try {
+                        Date date = dateFormat.parse(formattedDateTime);
+                        calendar.setTime(date);
+                    } catch (ParseException e) {
+                        Log.e("EditCandidatureActivity", "Error parsing date: " + e.getMessage());
+                    }
+                    int offerId = Integer.parseInt(offre._id.replace("/api/offres/", ""));
+                    int etatId = Integer.parseInt(offre.etatOffre.replace("/api/etat_offres/", ""));
+                    String content = "Vous avez un rappel aujourd'hui pour l'offre " + offre.intitule +
+                            ".\nLe statut de l'offre est actuellement : " + EtatOffre.getString(EtatOffre.fromId(etatId)) + ".";
+                    scheduleNotification(offerId, content, calendar.getTimeInMillis());
                     Toast.makeText(EditCandidatureActivity.this, "Candidature mise à jour", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -244,7 +282,6 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
         // Set a calendar to now
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.FRANCE);
         try{
             // Check if the date is in the past
             if(calendar.getTime().after(dateFormat.parse(date))){
@@ -285,16 +322,15 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
                             try {
                                 String dateCand = c.dateAction;
                                 // Format the date
-                                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.FRANCE);
                                 Date date = dateFormat.parse(dateCand);
                                 // Extract values to set class variables
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTime(date);
-                                EditCandidatureActivity.this.year = calendar.get(Calendar.YEAR);
-                                EditCandidatureActivity.this.month = calendar.get(Calendar.MONTH);
-                                EditCandidatureActivity.this.day = calendar.get(Calendar.DAY_OF_MONTH);
-                                EditCandidatureActivity.this.hour = calendar.get(Calendar.HOUR_OF_DAY);
-                                EditCandidatureActivity.this.minute = calendar.get(Calendar.MINUTE);
+                                year = calendar.get(Calendar.YEAR);
+                                month = calendar.get(Calendar.MONTH);
+                                day = calendar.get(Calendar.DAY_OF_MONTH);
+                                hour = calendar.get(Calendar.HOUR_OF_DAY);
+                                minute = calendar.get(Calendar.MINUTE);
                                 // Set the date and time
                                 formatDateTimeString();
                                 // initView();
@@ -332,7 +368,6 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
             abandonnerBtn.setAlpha(1f);
             try {
                 Calendar calendar = Calendar.getInstance();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.FRANCE);
                 calendar.setTime(Objects.requireNonNull(dateFormat.parse(candidature.dateAction)));
                 // Set the textviews
                 dateTV.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR));
@@ -455,11 +490,10 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
         calendar.set(year, month, day, hour, minute);
 
         // Set the desired format
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         // Format the date and time string
-        formattedDateTime = sdf.format(calendar.getTime());
+        formattedDateTime = dateFormat.format(calendar.getTime());
 
         // Use the formattedDateTime as needed
         Log.d("FormattedDateTime", formattedDateTime);
@@ -496,6 +530,46 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
         timePickerDialog.updateTime(hour, minute);
         // Show the TimePickerDialog
         timePickerDialog.show();
+    }
+
+
+    private void scheduleNotification(int offerID, String notificationContent, long triggerTime){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
+                .setContentTitle("Pensez à postuler !")
+                .setContentText(notificationContent)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        builder.setContentIntent(pendingIntent);
+
+        // Schedule the notification
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION_ID, offerID);
+        alarmIntent.putExtra(NotificationReceiver.NOTIFICATION, builder.build());
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, alarmPendingIntent);
+        Log.d("NotificationDebug", "Notification scheduled for " + offerID + " at " + new Date(triggerTime));
+
+    }
+
+    private void cancelNotification(int offerID){
+        // Cancel the notification
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent alarmIntent = new Intent(this, NotificationReceiver.class);
+        PendingIntent alarmPendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE);
+        if(alarmPendingIntent != null) {
+            alarmManager.cancel(alarmPendingIntent);
+            alarmPendingIntent.cancel();
+        }
+        Log.d("NotificationDebug", "Notification cancelled for " + offerID);
     }
 
 }

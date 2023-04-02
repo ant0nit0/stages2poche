@@ -70,6 +70,12 @@ public class DetailOffreActivity extends StageAppActivity {
             finish();
         }
 
+        // If the page is load from a candidature, dont show "lesOffres"
+        boolean comeFromCandidature = getIntent().getBooleanExtra("comeFromCandidature", false);
+        if(comeFromCandidature) {
+            lesOffresTV.setVisibility(View.GONE);
+        }
+
         // Check if there is a candidature
         checkIfAlreadyCandidate();
         // Set the view
@@ -97,10 +103,7 @@ public class DetailOffreActivity extends StageAppActivity {
         lesOffresTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetailOffreActivity.this, AllOffersActivity.class);
-                // Clear the stack
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                finish();
             }
         });
     }
@@ -112,7 +115,7 @@ public class DetailOffreActivity extends StageAppActivity {
         checkIfAlreadyCandidate();
         // Set the view
         initView();
-
+        setButton();
     }
 
     private void initView() {
@@ -221,6 +224,7 @@ public class DetailOffreActivity extends StageAppActivity {
             }
         });
     }
+
 
     private void setButton() {
         try {
