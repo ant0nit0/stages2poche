@@ -5,4 +5,9 @@
     <string name="action_sign_in">Se connecter</string>
     <string name="main_offres_title">Offres</string>
     <string name="main_candidatures_title">Mes candidatures</string>
+    <string name="se_d_connecter">Se déconnecter</string>
+    <string name="mon_compte">Mon compte :</string>
+    <string name="a_envoyer">A envoyer :</string>
+    <string name="a_envoyer_desc">Vous avez retenu cette offre de stage mais n\'y avez pas encore candidaté.</string>
+    <string name="acceptee_desc">Vous avez obtenu une réponse positive à votre candidature à l\'issu du rendez-vous.</string>
 </resources>

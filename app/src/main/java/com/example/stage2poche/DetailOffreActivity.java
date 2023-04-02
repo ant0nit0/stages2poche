@@ -40,7 +40,7 @@ public class DetailOffreActivity extends StageAppActivity {
     private Button modifierBtn;
     private Offre offre;
 
-    private boolean candidatureAcceptee = false;
+    private boolean candidatureAcceptee = false, comeFromCandidature = false;
 
 
     @Override
@@ -71,7 +71,7 @@ public class DetailOffreActivity extends StageAppActivity {
         }
 
         // If the page is load from a candidature, dont show "lesOffres"
-        boolean comeFromCandidature = getIntent().getBooleanExtra("comeFromCandidature", false);
+        comeFromCandidature = getIntent().getBooleanExtra("comeFromCandidature", false);
         if(comeFromCandidature) {
             lesOffresTV.setVisibility(View.GONE);
         }
@@ -197,6 +197,13 @@ public class DetailOffreActivity extends StageAppActivity {
         APIClient.getCandidatures(DetailOffreActivity.this, new ResultatAppel<CandidaturesResponse>() {
             @Override
             public void traiterResultat(CandidaturesResponse response) {
+                if(response == null) {
+                    return;
+                }
+                if(response.candidatures == null) {
+                    setButton();
+                    return;
+                }
                 // Get the candidatures
                 List<Candidature> candidatures = response.candidatures;
                 // Check if the user is already candidate
@@ -286,6 +293,7 @@ public class DetailOffreActivity extends StageAppActivity {
             modifierBtn.setOnClickListener(v -> {
                 Intent intent = new Intent(DetailOffreActivity.this, EditCandidatureActivity.class);
                 intent.putExtra("offre", offre);
+                intent.putExtra("comeFromCandidature", comeFromCandidature);
                 startActivity(intent);
             });
         }

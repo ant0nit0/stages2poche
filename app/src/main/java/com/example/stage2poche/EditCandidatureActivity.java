@@ -54,16 +54,16 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
 
     private Offre offre;
     private Spinner spinnerEtat;
-    private ImageView calendarIcon, hourIcon, infoPopUpEtat;
+    private ImageView calendarIcon, hourIcon, infoPopUpEtat, arianeRightChevron;
     private Button annulerBtn, validerBtn, abandonnerBtn;
     private TextView dateTV, hourTV, accueilTV, lesOffresArianeTV, offreArianeTV, intituleTV;
     private EditText descriptionET;
     private int year = -1, month = -1, day = -1, hour = -1, minute = -1, etatIndex;
-    private String formattedDateTime, typeAction;
+    private String formattedDateTime;
 
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.FRANCE);
     private Candidature candidature;
-    boolean isCandidate = false;
+    boolean isCandidate = false, comeFromCandidature = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
         spinnerEtat = findViewById(R.id.edit_spinner_etat); // Récupération du Spinner affichant les états de la candidature
         infoPopUpEtat = findViewById(R.id.edit_info_pop_up_etat); // Récupération de l'ImageView activant le PopUp
         spinnerEtat.setOnItemSelectedListener(this); // Définition de l'itemListener sur le spinner
+        arianeRightChevron = findViewById(R.id.edit_ariane_right_chevron);
 
 
         // Get the Data
@@ -101,13 +102,24 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
 
         // Listeners
         // Fil d'ariane
+        // If the page is load from a candidature, dont show "lesOffres"
+        comeFromCandidature = getIntent().getBooleanExtra("comeFromCandidature", false);
+        if(comeFromCandidature) {
+            lesOffresArianeTV.setVisibility(View.GONE);
+            arianeRightChevron.setVisibility(View.GONE);
+            offreArianeTV.setText("Candidature");
+        } else {
+            lesOffresArianeTV.setOnClickListener(v -> {
+                Intent intent = new Intent(EditCandidatureActivity.this, AllOffersActivity.class);
+                // Clear the stack
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            });
+        }
         offreArianeTV.setOnClickListener(view -> finish());
-        lesOffresArianeTV.setOnClickListener(v -> {
-            Intent intent = new Intent(EditCandidatureActivity.this, AllOffersActivity.class);
-            // Clear the stack
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-        });
+
+
+
         accueilTV.setOnClickListener(v -> {
             Intent intent = new Intent(EditCandidatureActivity.this, MainActivity.class);
             // Clear the stack
@@ -173,9 +185,14 @@ public class EditCandidatureActivity extends StageAppActivity implements Adapter
                 int offreId = Integer.parseInt(offre._id.replace("/api/offres/", ""));
                 cancelNotification(offreId);
                 Toast.makeText(EditCandidatureActivity.this, "Candidature supprimée", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(EditCandidatureActivity.this, DetailOffreActivity.class);
-                intent.putExtra("offre", offre);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Intent intent;
+                if(comeFromCandidature) {
+                    intent = new Intent(EditCandidatureActivity.this, MainActivity.class);
+                } else {
+                    intent = new Intent(EditCandidatureActivity.this, DetailOffreActivity.class);
+                    intent.putExtra("offre", offre);
+                }
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }
 

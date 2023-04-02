@@ -15,6 +15,22 @@
     <!-- Notifications channel -->
     <string name="channel_name">Relance de canddature</string>
     <string name="channel_description">Channel servant a rappeler de relancer les candidatures</string>
+    <string name="se_d_connecter">Se déconnecter</string>
+    <string name="mon_compte">Mon compte :</string>
+    <string name="etats">Etats</string>
+    <string name="a_envoyer">A envoyer :</string>
+    <string name="a_envoyer_desc">Vous avez retenu cette offre de stage mais n\'y avez pas encore candidaté.</string>
+    <string name="en_attente_de_r_ponse">En attente de réponse :</string>
+    <string name="att_rep_desc">Vous avez envoyé votre candidature mais n\'avez pas encore obtenu de réponse.</string>
+    <string name="en_attente_de_rdv">En attente de Rdv :</string>
+    <string name="att_rdv_desc">Vous avez retenu une réponse positive à votre candidature et attendez de définir une date de rendez-vous.</string>
+    <string name="en_attente_d_entretien">En attente d\'entretien :</string>
+    <string name="att_entrertien_deesc">Vous avez obtenu une date de rendez-vous et attendez que celui-ci soit réalisé.</string>
+    <string name="refusee">Refusée :</string>
+    <string name="refusee_deesc">Vous avez obtenu une réponse négative à votre candidature.</string>
+    <string name="acceptee">Acceptée :</string>
+    <string name="acceptee_desc">Vous avez obtenu une réponse positive à votre candidature à l\'issu du rendez-vous.</string>
+    <string name="appName">Stages2Poche</string>
 
 
     <string-array name="etats_candidature">

@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Etats"
+            android:text="@string/etats"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
@@ -44,7 +44,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="A envoyer :"
+        android:text="@string/a_envoyer"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -52,7 +52,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez retenu cette offre de stage mais n'y avez pas encore candidaté."
+        android:text="@string/a_envoyer_desc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 
@@ -66,7 +66,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="En attente de réponse :"
+        android:text="@string/en_attente_de_r_ponse"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -74,7 +74,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez envoyé votre candidature mais n'avez pas encore obtenu de réponse."
+        android:text="@string/att_rep_desc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 
@@ -88,7 +88,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="En attente de Rdv :"
+        android:text="@string/en_attente_de_rdv"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -96,7 +96,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez retenu une réponse positive à votre candidature et attendez de définir une date de rendez-vous."
+        android:text="@string/att_rdv_desc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 
@@ -110,7 +110,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="En attente d'entretien :"
+        android:text="@string/en_attente_d_entretien"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -118,7 +118,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez obtenu une date de rendez-vous et attendez que celui-ci soit réalisé."
+        android:text="@string/att_entrertien_deesc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 
@@ -132,7 +132,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Refusée :"
+        android:text="@string/refusee"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -140,7 +140,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez obtenu une réponse négative à votre candidature."
+        android:text="@string/refusee_deesc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 
@@ -154,7 +154,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Acceptée :"
+        android:text="@string/acceptee"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@android:color/black"/>
@@ -162,7 +162,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vous avez obtenu une réponse positive à votre candidature à l'issu du rendez-vous."
+        android:text="@string/acceptee_desc"
         android:textSize="14sp"
         android:textColor="@android:color/black"/>
 

@@ -43,7 +43,7 @@ public class MainActivity extends StageAppActivity {
     private DrawerLayout drawerLayout;
     private ImageView asideMenuQuit, asideMenu;
 
-    private TextView nbOffresConsulteesTV, nbOffresRetenuesTV, nbCandidaturesEnvoyeesTV, totalOffresTV, drawerUsernameTV, drawerLastCoTV;
+    private TextView nbOffresConsulteesTV, nbOffresRetenuesTV, nbCandidaturesEnvoyeesTV, totalOffresTV, drawerUsernameTV; //, drawerLastCoTV;
 
     private LinearLayout candidaturesLayout;
     private ProgressBar progressBar;
@@ -76,7 +76,7 @@ public class MainActivity extends StageAppActivity {
         asideMenuQuit = findViewById(R.id.aside_menu_quit);
         asideMenu = findViewById(R.id.aside_menu);
         drawerUsernameTV = findViewById(R.id.drawer_compte_username);
-        drawerLastCoTV = findViewById(R.id.drawer_compte_last_co);
+        // drawerLastCoTV = findViewById(R.id.drawer_compte_last_co);
         drawerLogoutBtn = findViewById(R.id.drawer_logout_button);
 
         initDrawer();

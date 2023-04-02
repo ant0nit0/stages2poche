@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mon compte : "
+            android:text="@string/mon_compte"
             android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
@@ -45,6 +45,7 @@
 
     </LinearLayout>
 
+    <!-- Not implemented
     <LinearLayout
         android:id="@+id/derniere_connexion"
         android:layout_width="wrap_content"
@@ -56,7 +57,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dernière connexion le :"
+            android:text=""
             android:textSize="20sp"
             android:textColor="@color/black"
             android:textStyle="bold"/>
@@ -70,13 +71,13 @@
             android:textColor="#777474"
             android:textStyle="bold"/>
 
-    </LinearLayout>
+    </LinearLayout> -->
 
     <Button
         android:id="@+id/drawer_logout_button"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="Se déconnecter"
+        android:text="@string/se_d_connecter"
         android:textColor="@color/white"
         android:layout_marginStart="48dp"
         android:layout_marginTop="48dp"
